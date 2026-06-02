@@ -1,0 +1,70 @@
+import axios from 'axios';
+import type { LoanApplication, LoanAssessment } from '../types/loan';
+
+const loanWebhookUrl = import.meta.env.VITE_N8N_WEBHOOK_URL as string | undefined;
+const chatbotWebhookUrl = import.meta.env.VITE_N8N_CHATBOT_WEBHOOK_URL as string | undefined;
+
+const calculateMockAssessment = (application: LoanApplication): LoanAssessment => {
+  const incomeRatio = application.loanAmount / Math.max(application.monthlyIncome, 1);
+  const isInformal =
+    application.occupation === 'Market Vendor' ||
+    application.occupation === 'Smallholder Farmer' ||
+    application.occupation === 'Boda Boda Rider';
+  const riskScore = Math.min(82, Math.max(22, Math.round(incomeRatio * 18 + application.numberOfDependents * 4 + (isInformal ? 8 : 2))));
+  const requiresHunterAgent = riskScore > 48 || application.occupation === 'Smallholder Farmer';
+
+  return {
+    applicantName: application.fullName,
+    occupation: application.occupation,
+    county: application.county,
+    loanAmount: application.loanAmount,
+    status: requiresHunterAgent ? 'Escalated to Human Loan Officer' : 'Approved for Tier-1 Review',
+    riskScore,
+    repaymentCapacity:
+      incomeRatio <= 2.5
+        ? 'Strong repayment capacity with manageable monthly obligation.'
+        : 'Moderate repayment capacity requiring tailored repayment safeguards.',
+    seasonalIncomeAssessment:
+      application.occupation === 'Smallholder Farmer'
+        ? 'Income likely varies by harvest cycle; repayment plan should include seasonal grace windows.'
+        : 'Income pattern appears suitable for weekly or monthly micro-repayment scheduling.',
+    requiresHunterAgent,
+  };
+};
+
+export const submitLoanApplication = async (application: LoanApplication): Promise<LoanAssessment> => {
+  if (!loanWebhookUrl) {
+    return calculateMockAssessment(application);
+  }
+
+  try {
+    const response = await axios.post<LoanAssessment>(loanWebhookUrl, application, {
+      timeout: 12000,
+    });
+
+    return {
+      ...calculateMockAssessment(application),
+      ...response.data,
+    };
+  } catch {
+    return calculateMockAssessment(application);
+  }
+};
+
+export const askScoutAgent = async (message: string): Promise<string> => {
+  if (!chatbotWebhookUrl) {
+    return `Scout Agent: Start with a simple cash-flow plan for "${message}". Track weekly income, separate school fees or harvest proceeds early, and keep a short repayment history SACCO officers can review.`;
+  }
+
+  try {
+    const response = await axios.post<{ response?: string; message?: string }>(
+      chatbotWebhookUrl,
+      { message },
+      { timeout: 12000 },
+    );
+
+    return response.data.response ?? response.data.message ?? 'Scout Agent received your question and recommends reviewing your cash flow before borrowing.';
+  } catch {
+    return 'Scout Agent: I could not reach the workflow right now, but a good next step is to document income, expenses, savings group records, and expected seasonal obligations.';
+  }
+};
