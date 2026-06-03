@@ -10,7 +10,7 @@ export default {
           800: '#253347',
           700: '#344054',
         },
-        ujima: {
+        mwananchi: {
           50: '#ecfdf5',
           100: '#d1fae5',
           500: '#12b76a',

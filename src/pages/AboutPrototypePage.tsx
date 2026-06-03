@@ -65,7 +65,7 @@ export const AboutPrototypePage = () => (
             <ul className="mt-2 space-y-2">
               {framework.items.map((item) => (
                 <li key={item} className="flex items-center gap-2 text-sm font-semibold text-slate-600">
-                  <span className="h-1.5 w-1.5 rounded-full bg-ujima-600" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-mwananchi-600" />
                   {item}
                 </li>
               ))}

@@ -36,9 +36,9 @@ export const LandingPage = () => (
     <section className="border-b border-slate-200 bg-white">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-8 lg:py-20">
         <div className="flex flex-col justify-center">
-          <p className="mb-4 text-sm font-bold uppercase tracking-wide text-ujima-700">Ethical AI for SACCO inclusion</p>
+          <p className="mb-4 text-sm font-bold uppercase tracking-wide text-mwananchi-700">Ethical AI for SACCO inclusion</p>
           <h1 className="max-w-4xl text-4xl font-bold tracking-tight text-ink-950 sm:text-5xl lg:text-6xl">
-            Ujima Sacco AI Loan Assistant
+            Mwananchi  AI Loan Assistant
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">
             An ethical AI-powered lending support platform designed to improve financial inclusion for informal traders across East Africa.
@@ -53,13 +53,13 @@ export const LandingPage = () => (
           </div>
         </div>
         <div className="rounded-lg border border-slate-200 bg-slate-50 p-5 shadow-soft">
-          <div className="rounded-md bg-ink-950 p-5 text-white">
-            <p className="text-sm font-semibold text-ujima-100">Loan decision support</p>
+            <div className="rounded-md bg-ink-950 p-5 text-white">
+            <p className="text-sm font-semibold text-mwananchi-100">Loan decision support</p>
             <div className="mt-6 grid gap-3">
               {['Bias-aware screening', 'Guardian compliance checks', 'Human escalation ready'].map((item) => (
                 <div key={item} className="flex items-center justify-between rounded-md bg-white/10 px-4 py-3">
                   <span className="text-sm font-semibold">{item}</span>
-                  <span className="rounded-md bg-ujima-500 px-2 py-1 text-xs font-bold text-ink-950">Active</span>
+                  <span className="rounded-md bg-mwananchi-500 px-2 py-1 text-xs font-bold text-ink-950">Active</span>
                 </div>
               ))}
             </div>

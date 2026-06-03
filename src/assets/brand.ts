@@ -1,1 +1,1 @@
-export const brandName = 'Ujima Sacco AI Loan Assistant';
+export const brandName = 'Mwananchi  AI Loan Assistant';

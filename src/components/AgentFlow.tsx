@@ -12,7 +12,7 @@ export const AgentFlow = ({ steps }: AgentFlowProps) => (
           <div className="w-full max-w-md rounded-md border border-slate-200 bg-slate-50 px-4 py-3 text-center text-sm font-bold text-ink-900">
             {step}
           </div>
-          {index < steps.length - 1 && <ArrowDown aria-hidden="true" className="text-ujima-600" size={22} />}
+          {index < steps.length - 1 && <ArrowDown aria-hidden="true" className="text-mwananchi-600" size={22} />}
         </div>
       ))}
     </div>

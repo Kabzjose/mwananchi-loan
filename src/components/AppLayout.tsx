@@ -70,7 +70,7 @@ export const AppLayout = () => {
       </main>
       <footer className="border-t border-slate-200 bg-white">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-8 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
-          <p className="text-sm font-semibold text-slate-700">Ujima Sacco AI Loan Assistant Capstone Project</p>
+          <p className="text-sm font-semibold text-slate-700">Mwananchi  AI Loan Assistant Capstone Project</p>
           <div className="flex flex-wrap gap-x-5 gap-y-2">
             {navItems.map((item) => (
               <Link key={item.to} to={item.to} className="focus-ring rounded-sm text-sm font-medium text-slate-600 hover:text-ink-950">

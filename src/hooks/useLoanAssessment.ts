@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { LoanAssessment } from '../types/loan';
 
-const storageKey = 'ujima-loan-assessment';
+const storageKey = 'mwananchi-loan-assessment';
 
 export const saveLoanAssessment = (assessment: LoanAssessment) => {
   sessionStorage.setItem(storageKey, JSON.stringify(assessment));

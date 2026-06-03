@@ -4,7 +4,7 @@ interface StatusBadgeProps {
 }
 
 const toneClass = {
-  green: 'bg-ujima-50 text-ujima-700 ring-ujima-100',
+  green: 'bg-mwananchi-50 text-mwananchi-700 ring-mwananchi-100',
   gold: 'bg-gold-100 text-gold-700 ring-orange-100',
   blue: 'bg-sky-50 text-sky-700 ring-sky-100',
 };

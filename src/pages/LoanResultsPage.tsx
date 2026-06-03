@@ -43,7 +43,7 @@ export const LoanResultsPage = () => {
               </div>
             ))}
           </dl>
-          <Link to="/apply" className="mt-5 inline-block text-sm font-bold text-ujima-700 hover:text-ujima-600">
+          <Link to="/apply" className="mt-5 inline-block text-sm font-bold text-mwananchi-700 hover:text-mwananchi-600">
             Review another application
           </Link>
         </section>
@@ -60,8 +60,8 @@ export const LoanResultsPage = () => {
           <div className="rounded-md bg-slate-50 p-4">
             <p className="text-sm font-bold text-slate-500">Risk Score</p>
             <p className="mt-2 text-3xl font-bold text-ink-950">{assessment.riskScore}</p>
-            <div className="mt-3 h-2 rounded-full bg-slate-200">
-              <div className="h-2 rounded-full bg-ujima-600" style={{ width: `${Math.min(assessment.riskScore, 100)}%` }} />
+              <div className="mt-3 h-2 rounded-full bg-slate-200">
+              <div className="h-2 rounded-full bg-mwananchi-600" style={{ width: `${Math.min(assessment.riskScore, 100)}%` }} />
             </div>
           </div>
           <div className="rounded-md bg-slate-50 p-4">
