@@ -14,6 +14,8 @@ const initialForm: LoanApplication = {
   fullName: '',
   occupation: 'Market Vendor',
   county: 'Nairobi',
+  phoneNumber: '',
+  email: '',
   monthlyIncome: 0,
   numberOfDependents: 0,
   loanAmount: 0,
@@ -61,6 +63,28 @@ export const LoanApplicationPage = () => {
               value={form.fullName}
               onChange={(event) => updateField('fullName', event.target.value)}
               placeholder="Grace Achieng"
+            />
+          </label>
+          <label>
+            <span className="text-sm font-bold text-ink-900">Phone Number</span>
+            <input
+              className="focus-ring mt-2 w-full rounded-md border border-slate-300 px-3 py-3 text-sm"
+              required
+              type="tel"
+              value={form.phoneNumber || ''}
+              onChange={(event) => updateField('phoneNumber', event.target.value)}
+              placeholder="+254700000000"
+            />
+          </label>
+          <label>
+            <span className="text-sm font-bold text-ink-900">Email</span>
+            <input
+              className="focus-ring mt-2 w-full rounded-md border border-slate-300 px-3 py-3 text-sm"
+              required
+              type="email"
+              value={form.email || ''}
+              onChange={(event) => updateField('email', event.target.value)}
+              placeholder="grace@example.com"
             />
           </label>
           <label>

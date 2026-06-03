@@ -11,6 +11,8 @@ export interface LoanApplication {
   fullName: string;
   occupation: Occupation;
   county: County;
+  phoneNumber?: string;
+  email?: string;
   monthlyIncome: number;
   numberOfDependents: number;
   loanAmount: number;
@@ -26,6 +28,19 @@ export interface LoanAssessment {
   repaymentCapacity: string;
   seasonalIncomeAssessment: string;
   requiresHunterAgent: boolean;
+  phoneNumber?: string;
+  email?: string;
+  agentContext?: {
+    decisionPath: string[];
+    explanations: { factor: string; weight: number }[];
+    confidence: number; // 0-100
+  };
+  deviceInfo?: {
+    userAgent?: string;
+    platform?: string;
+    timezone?: string;
+    accessTime?: string; // ISO timestamp
+  };
 }
 
 export interface ChatMessage {

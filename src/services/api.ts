@@ -29,6 +29,26 @@ const calculateMockAssessment = (application: LoanApplication): LoanAssessment =
         ? 'Income likely varies by harvest cycle; repayment plan should include seasonal grace windows.'
         : 'Income pattern appears suitable for weekly or monthly micro-repayment scheduling.',
     requiresHunterAgent,
+    phoneNumber: application.phoneNumber,
+    email: application.email,
+    agentContext: {
+      decisionPath: [
+        'ScoutAgent: initial screening',
+        requiresHunterAgent ? 'HunterAgent: detailed check' : 'Tier1: auto-approve checks',
+      ],
+      explanations: [
+        { factor: 'incomeRatio', weight: Math.round(incomeRatio * 10) },
+        { factor: 'dependents', weight: application.numberOfDependents * 2 },
+      ],
+      confidence: Math.max(50, 100 - Math.abs(50 - riskScore)),
+    },
+    deviceInfo: {
+      // Device info is populated client-side; in mock we include placeholders
+      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
+      platform: typeof navigator !== 'undefined' ? (navigator as any).platform : undefined,
+      timezone: Intl && Intl.DateTimeFormat ? Intl.DateTimeFormat().resolvedOptions().timeZone : undefined,
+      accessTime: new Date().toISOString(),
+    },
   };
 };
 

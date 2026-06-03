@@ -35,6 +35,8 @@ export const LoanResultsPage = () => {
               ['Applicant Name', assessment.applicantName],
               ['Occupation', assessment.occupation],
               ['County', assessment.county],
+              ['Phone', assessment.phoneNumber ?? 'N/A'],
+              ['Email', assessment.email ?? 'N/A'],
               ['Loan Amount', `KES ${assessment.loanAmount.toLocaleString()}`],
             ].map(([label, value]) => (
               <div key={label} className="flex items-center justify-between gap-4 border-b border-slate-100 pb-3">
@@ -73,6 +75,22 @@ export const LoanResultsPage = () => {
             <p className="mt-2 text-sm leading-6 text-ink-900">{assessment.seasonalIncomeAssessment}</p>
           </div>
         </div>
+      </section>
+      <section className="mt-6 rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+        <h2 className="text-lg font-bold text-ink-950">Agent Context & Explainability</h2>
+        <p className="mt-3 text-sm text-slate-600">Confidence: <span className="font-bold text-ink-950">{assessment.agentContext?.confidence ?? 'N/A'}</span></p>
+        <div className="mt-3 space-y-2">
+          {(assessment.agentContext?.explanations ?? []).map((ex, i) => (
+            <div key={i} className="rounded-md border border-slate-100 bg-slate-50 p-3">
+              <p className="text-sm font-semibold">{ex.factor}</p>
+              <p className="mt-1 text-xs text-slate-600">Weight: {ex.weight}</p>
+            </div>
+          ))}
+        </div>
+        <h3 className="mt-4 text-sm font-bold text-ink-950">Device & Access</h3>
+        <p className="mt-2 text-sm text-slate-600">Platform: <span className="font-semibold text-ink-950">{assessment.deviceInfo?.platform ?? 'Unknown'}</span></p>
+        <p className="mt-1 text-sm text-slate-600">User agent: <span className="font-mono text-xs">{assessment.deviceInfo?.userAgent ?? 'Unknown'}</span></p>
+        <p className="mt-1 text-sm text-slate-600">Access time: <span className="font-semibold text-ink-950">{assessment.deviceInfo?.accessTime ?? 'Unknown'}</span></p>
       </section>
     </PageShell>
   );
