@@ -1,8 +1,12 @@
 import axios from 'axios';
-import type { LoanApplication, LoanAssessment } from '../types/loan';
+import type { LoanApplication, LoanAssessment, LoanSubmissionPayload, LoanWorkflowResponse } from '../types/loan';
 
-const loanWebhookUrl = import.meta.env.VITE_N8N_WEBHOOK_URL as string | undefined;
-const chatbotWebhookUrl = import.meta.env.VITE_N8N_CHATBOT_WEBHOOK_URL as string | undefined;
+const loanWebhookUrl = import.meta.env.DEV
+  ? '/webhook/ujima-loan'
+  : (import.meta.env.VITE_N8N_WEBHOOK_URL as string | undefined);
+const chatbotWebhookUrl = import.meta.env.DEV
+  ? '/webhook/ujima-chatbot'
+  : (import.meta.env.VITE_N8N_CHATBOT_WEBHOOK_URL as string | undefined);
 
 const calculateMockAssessment = (application: LoanApplication): LoanAssessment => {
   const incomeRatio = application.loanAmount / Math.max(application.monthlyIncome, 1);
@@ -52,22 +56,69 @@ const calculateMockAssessment = (application: LoanApplication): LoanAssessment =
   };
 };
 
-export const submitLoanApplication = async (application: LoanApplication): Promise<LoanAssessment> => {
-  if (!loanWebhookUrl) {
-    return calculateMockAssessment(application);
+const normalizeStatus = (response: LoanWorkflowResponse | undefined, fallback: LoanAssessment['status']) => {
+  if (!response) {
+    return fallback;
   }
 
+  if (response.status === 'Human Review Required' || response.approved === false || response.escalated === true) {
+    return 'Human Review Required';
+  }
+
+  if (response.status === 'Bias Safe') {
+    return 'Bias Safe';
+  }
+
+  if (response.status === 'Escalated to Human Loan Officer' || response.status === 'Approved for Tier-1 Review') {
+    return response.status;
+  }
+
+  return fallback;
+};
+
+const mergeWorkflowAssessment = (application: LoanApplication, response?: LoanWorkflowResponse): LoanAssessment => {
+  const fallback = calculateMockAssessment(application);
+
+  return {
+    ...fallback,
+    applicantName: response?.applicantName ?? response?.applicant?.name ?? fallback.applicantName,
+    loanAmount: response?.loanAmount ?? response?.amount ?? fallback.loanAmount,
+    status: normalizeStatus(response, fallback.status),
+    riskScore: response?.riskScore ?? fallback.riskScore,
+    repaymentCapacity: response?.repaymentCapacity ?? fallback.repaymentCapacity,
+    seasonalIncomeAssessment: response?.seasonalIncomeAssessment ?? fallback.seasonalIncomeAssessment,
+    requiresHunterAgent: response?.requiresHunterAgent ?? response?.escalated ?? fallback.requiresHunterAgent,
+    phoneNumber: response?.phoneNumber ?? response?.applicant?.phone ?? fallback.phoneNumber ?? application.phoneNumber,
+    email: response?.email ?? response?.applicant?.email ?? fallback.email ?? application.email,
+    agentContext: response?.agentContext ?? fallback.agentContext,
+    deviceInfo: response?.deviceInfo ?? fallback.deviceInfo,
+  };
+};
+
+export const submitLoanApplication = async (application: LoanApplication): Promise<LoanAssessment> => {
+  if (!loanWebhookUrl) {
+    throw new Error('Missing VITE_N8N_WEBHOOK_URL environment variable.');
+  }
+
+  const payload: LoanSubmissionPayload = {
+    message: application.message,
+    applicant: {
+      name: application.fullName,
+      email: application.email ?? '',
+      phone: application.phoneNumber ?? '',
+    },
+    amount: Number(application.loanAmount),
+  };
+
   try {
-    const response = await axios.post<LoanAssessment>(loanWebhookUrl, application, {
+    const response = await axios.post<LoanWorkflowResponse>(loanWebhookUrl, payload, {
       timeout: 12000,
     });
-
-    return {
-      ...calculateMockAssessment(application),
-      ...response.data,
-    };
+     
+    return mergeWorkflowAssessment(application, response.data);
   } catch {
-    return calculateMockAssessment(application);
+    
+    throw new Error('Failed to submit application to the n8n webhook.');
   }
 };
 

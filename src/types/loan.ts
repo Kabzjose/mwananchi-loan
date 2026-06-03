@@ -9,6 +9,7 @@ export type County = 'Nairobi' | 'Kakamega' | 'Busia' | 'Kisumu' | 'Mombasa';
 
 export interface LoanApplication {
   fullName: string;
+  message: string;
   occupation: Occupation;
   county: County;
   phoneNumber?: string;
@@ -23,7 +24,7 @@ export interface LoanAssessment {
   occupation: Occupation;
   county: County;
   loanAmount: number;
-  status: 'Approved for Tier-1 Review' | 'Escalated to Human Loan Officer';
+  status: 'Approved for Tier-1 Review' | 'Escalated to Human Loan Officer' | 'Human Review Required' | 'Bias Safe';
   riskScore: number;
   repaymentCapacity: string;
   seasonalIncomeAssessment: string;
@@ -47,4 +48,37 @@ export interface ChatMessage {
   id: string;
   role: 'user' | 'assistant';
   content: string;
+}
+
+export interface LoanSubmissionPayload {
+  message: string;
+  applicant: {
+    name: string;
+    email: string;
+    phone: string;
+  };
+  amount: number;
+}
+
+export interface LoanWorkflowResponse {
+  applicantName?: string;
+  applicant?: {
+    name?: string;
+    email?: string;
+    phone?: string;
+  };
+  amount?: number;
+  loanAmount?: number;
+  approved?: boolean;
+  escalated?: boolean;
+  status?: string;
+  riskScore?: number;
+  riskFlags?: number;
+  requiresHunterAgent?: boolean;
+  repaymentCapacity?: string;
+  seasonalIncomeAssessment?: string;
+  phoneNumber?: string;
+  email?: string;
+  agentContext?: LoanAssessment['agentContext'];
+  deviceInfo?: LoanAssessment['deviceInfo'];
 }

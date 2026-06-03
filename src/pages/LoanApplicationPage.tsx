@@ -12,6 +12,7 @@ const counties: County[] = ['Nairobi', 'Kakamega', 'Busia', 'Kisumu', 'Mombasa']
 
 const initialForm: LoanApplication = {
   fullName: '',
+  message: '',
   occupation: 'Market Vendor',
   county: 'Nairobi',
   phoneNumber: '',
@@ -51,7 +52,7 @@ export const LoanApplicationPage = () => {
     <PageShell
       eyebrow="Loan application"
       title="Applicant Information"
-      description="Submit a member application to the n8n workflow. If the webhook is offline, the prototype uses a typed mock assessment for demonstration."
+      description="Submit a Mwananchi Loan application directly to the n8n webhook. The message field is required because it drives the Scout Agent stress check."
     >
       <form onSubmit={handleSubmit} className="max-w-3xl rounded-lg border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
         <div className="grid gap-5 sm:grid-cols-2">
@@ -64,6 +65,17 @@ export const LoanApplicationPage = () => {
               onChange={(event) => updateField('fullName', event.target.value)}
               placeholder="Grace Achieng"
             />
+          </label>
+          <label className="sm:col-span-2">
+            <span className="text-sm font-bold text-ink-900">Loan Message</span>
+            <textarea
+              className="focus-ring mt-2 min-h-32 w-full rounded-md border border-slate-300 px-3 py-3 text-sm"
+              required
+              value={form.message}
+              onChange={(event) => updateField('message', event.target.value)}
+              placeholder="I am struggling to pay school fees and need support to cover this term."
+            />
+            <p className="mt-2 text-xs leading-5 text-slate-500">Use this to describe your situation in plain language. It is sent to n8n as the `message` field.</p>
           </label>
           <label>
             <span className="text-sm font-bold text-ink-900">Phone Number</span>

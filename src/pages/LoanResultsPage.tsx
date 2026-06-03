@@ -17,6 +17,7 @@ export const LoanResultsPage = () => {
   }
 
   const flow = ['Applicant', 'Scout Agent', 'Guardian Agent', ...(assessment.requiresHunterAgent ? ['Hunter Agent'] : []), 'Human Review'];
+  const escalationTone = assessment.status === 'Human Review Required' || assessment.status.includes('Escalated') ? 'gold' : 'green';
 
   return (
     <PageShell
@@ -28,7 +29,7 @@ export const LoanResultsPage = () => {
         <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
           <div className="mb-5 flex items-center justify-between gap-3">
             <h2 className="text-lg font-bold text-ink-950">Application Summary</h2>
-            <StatusBadge label={assessment.status} tone={assessment.status.includes('Escalated') ? 'gold' : 'green'} />
+            <StatusBadge label={assessment.status} tone={escalationTone} />
           </div>
           <dl className="grid gap-4 text-sm">
             {[

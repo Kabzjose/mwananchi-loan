@@ -1,4 +1,5 @@
 import { ArrowRight, BadgeCheck, BookOpenCheck, CalendarClock, Scale } from 'lucide-react';
+import { brandName } from '../assets/brand';
 import { Button } from '../components/Button';
 import { InfoCard } from '../components/InfoCard';
 
@@ -38,7 +39,7 @@ export const LandingPage = () => (
         <div className="flex flex-col justify-center">
           <p className="mb-4 text-sm font-bold uppercase tracking-wide text-mwananchi-700">Ethical AI for SACCO inclusion</p>
           <h1 className="max-w-4xl text-4xl font-bold tracking-tight text-ink-950 sm:text-5xl lg:text-6xl">
-            Mwananchi  AI Loan Assistant
+            {brandName} AI Assistant
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">
             An ethical AI-powered lending support platform designed to improve financial inclusion for informal traders across East Africa.

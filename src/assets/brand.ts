@@ -1,1 +1,1 @@
-export const brandName = 'Mwananchi  AI Loan Assistant';
+export const brandName = 'Mwananchi Loan';
