@@ -81,7 +81,7 @@ export const LoanResultsPage = () => {
         <h2 className="text-lg font-bold text-ink-950">Agent Context & Explainability</h2>
         <p className="mt-3 text-sm text-slate-600">Confidence: <span className="font-bold text-ink-950">{assessment.agentContext?.confidence ?? 'N/A'}</span></p>
         <div className="mt-3 space-y-2">
-          {(assessment.agentContext?.explanations ?? []).map((ex, i) => (
+          {(assessment.agentContext?.explanations ?? []).map((ex: { factor: string; weight: number }, i: number) => (
             <div key={i} className="rounded-md border border-slate-100 bg-slate-50 p-3">
               <p className="text-sm font-semibold">{ex.factor}</p>
               <p className="mt-1 text-xs text-slate-600">Weight: {ex.weight}</p>
