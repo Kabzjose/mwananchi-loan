@@ -1,6 +1,7 @@
 import { AgentFlow } from '../components/AgentFlow';
 import { InfoCard } from '../components/InfoCard';
 import { PageShell } from '../components/PageShell';
+import workflowImage from '../assets/image.png';
 
 const builtUsing = ['React', 'TypeScript', 'Tailwind CSS', 'n8n Workflow Automation', 'Vercel Deployment'];
 
@@ -49,6 +50,10 @@ export const AboutPrototypePage = () => (
         <p className="mt-3 text-sm leading-6 text-slate-600">
           This prototype uses n8n workflows to simulate agent collaboration and loan processing decisions.
         </p>
+        <div className="mt-4">
+          <img src={workflowImage} alt="n8n workflow" className="w-full rounded-md border border-slate-100 shadow-sm" />
+          <p className="mt-2 text-xs text-slate-500">Workflow preview — replace with your screenshot at <span className="font-mono">src/assets/n8n-workflow.svg</span></p>
+        </div>
       </section>
     </div>
 
