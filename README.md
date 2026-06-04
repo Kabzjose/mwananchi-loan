@@ -1,7 +1,7 @@
 
-# Ujima SACCO — Prototype Repository
+# Mwanachi loan — Prototype Repository
 
-This repository contains the Ujima SACCO capstone prototype: a client-side React application that demonstrates how ethically-designed AI agents can assist SACCO lending decisions while preserving oversight, auditability, and dignity.
+This repository contains the mwananchi capstone prototype: a client-side React application that demonstrates how ethically-designed AI agents can assist SACCO lending decisions while preserving oversight, auditability, and dignity.
 
 Key ideas:
 - The UI (client/) lets users apply for loans and view assessment results.
