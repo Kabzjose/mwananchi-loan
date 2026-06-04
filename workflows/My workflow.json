@@ -1,0 +1,557 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ujima-loan",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*http://localhost:5173"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "2831d0f1-b534-47f8-b5ad-06ce4e001e02",
+      "name": "Webhook",
+      "webhookId": "18ea2480-e54a-45bf-90b6-c683eb874f34"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $json.body || $json;\n\nconst text = body.message || \"\";\nconst applicant = body.applicant;\nconst amount = body.amount;\n\nconst stressWords = [\n  \"school fees\",\n  \"loan shark\",\n  \"no money\",\n  \"can't pay\",\n  \"struggling\"\n];\n\nconst detected = stressWords.some(word =>\n  text.toLowerCase().includes(word)\n);\n\nreturn [{\n  financialStress: detected,\n  message: text,\n  applicant: applicant,\n  amount: amount\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "873440e4-3924-4891-8d69-6a9c87a291d0",
+      "name": "Scout Agent"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "fd1242a4-6faf-4281-bb1c-ec5f9f00cb6d",
+              "leftValue": "={{ $json.financialStress }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "89c599c1-50ef-42f3-abf4-c290fd815b54",
+      "name": "HUNT Handoff"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const amount = Number($json.amount);\n\nlet riskFlags = 0;\n\nif(amount > 15000){\n riskFlags++;\n}\n\nreturn {\n amount,\n riskFlags,\n escalate: amount > 15000,\n applicant: $json.applicant\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        624,
+        -48
+      ],
+      "id": "53c5cdf3-34ef-45ca-997d-460fc0b7d5f6",
+      "name": "Guardian Agent"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "3fc95eac-55f8-49d0-85db-6cae9f4b163e",
+              "leftValue": "={{ $json.amount }}",
+              "rightValue": 15000,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        832,
+        -48
+      ],
+      "id": "38060855-d2f5-4d98-bb72-5666ff281527",
+      "name": "PRIDE Pause Point"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  status: \"Human Review Required\",\n  applicant: $json.applicant,\n  amount: $json.amount,\n  reason: \"Loan exceeds KES 15,000 limit\",\n  approved: false,        // add this\n  escalated: true\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        -144
+      ],
+      "id": "f4b9eef8-fd70-4b4a-a0bd-9f6dd09fc00a",
+      "name": "Hunter Agent"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const applicant = Object.assign({}, $json.applicant || {});\n\nconst sensitiveFields = ['gender', 'ethnicity', 'race', 'religion'];\nsensitiveFields.forEach(field => {\n  if(field in applicant){\n    delete applicant[field];\n  }\n});\n\nreturn {\n  applicant,\n  amount: $json.amount,\n  approved: true,\n  escalated: false,\n  status: \"Bias Safe\"\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        48
+      ],
+      "id": "50a77f7e-e5ee-4f5d-b8f9-ee9aa49dea4b",
+      "name": "GUARD Safety Rail"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1SrgYCfgjTJ8FjvjcJzduvWvzDPheFcPQCdS-tmiiV88",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1SrgYCfgjTJ8FjvjcJzduvWvzDPheFcPQCdS-tmiiV88/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Applicant": "={{ $json.applicant.name }}",
+            "Amount": "={{ $json.amount }}",
+            "Approved": "={{ $json.approved }}",
+            "Escalated": "={{ $json.escalated }}",
+            "Timestamp": "={{ new Date().toISOString() }}",
+            "Phone": "={{ $json.applicant.phone }}",
+            "Email": "={{ $json.applicant.email }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Applicant",
+              "displayName": "Applicant",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Amount",
+              "displayName": "Amount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Approved",
+              "displayName": "Approved",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Escalated",
+              "displayName": "Escalated",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1248,
+        -144
+      ],
+      "id": "1b612868-2250-49ad-afdc-c99790531718",
+      "name": "CYCLE Capture1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "9hqbEbsFodNQIKbq",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1SrgYCfgjTJ8FjvjcJzduvWvzDPheFcPQCdS-tmiiV88",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1SrgYCfgjTJ8FjvjcJzduvWvzDPheFcPQCdS-tmiiV88/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Applicant": "={{ $json.applicant?.name || $json.applicant }}",
+            "Amount": "={{ $json.amount }}",
+            "Approved": "={{ $json.approved }}",
+            "Escalated": "={{ $json.escalated }}",
+            "Timestamp": "={{ new Date().toISOString() }}",
+            "Email": "={{ $json.applicant.email }}",
+            "Phone": "={{ $json.applicant.phone }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Applicant",
+              "displayName": "Applicant",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Amount",
+              "displayName": "Amount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Approved",
+              "displayName": "Approved",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Escalated",
+              "displayName": "Escalated",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1232,
+        48
+      ],
+      "id": "a6973d39-52b0-46e7-be52-c9b3208c92fa",
+      "name": "CYCLE Capture",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "9hqbEbsFodNQIKbq",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"Human Review Required\",\n  \"approved\": false,\n  \"escalated\": true,\n  \"applicant\": \"={{ $json.applicant }}\",\n  \"amount\": \"={{ $json.amount }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1456,
+        -144
+      ],
+      "id": "0bda9731-d512-4700-85f4-8b02142ec2f0",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"Bias Safe\",\n  \"approved\": true,\n  \"escalated\": false,\n  \"applicant\": \"={{ $json.applicant }}\",\n  \"amount\": \"={{ $json.amount }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1440,
+        48
+      ],
+      "id": "2f9b52c6-0180-4ebb-b94a-5e654528d535",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"Approved for Tier-1 Review\",\n  \"approved\": true,\n  \"escalated\": false,\n  \"applicant\": \"={{ $json.applicant }}\",\n  \"amount\": \"={{ $json.amount }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        624,
+        96
+      ],
+      "id": "f3f8763e-2399-4eeb-a4d8-d9dd313e82c3",
+      "name": "Respond to Webhook2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Scout Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scout Agent": {
+      "main": [
+        [
+          {
+            "node": "HUNT Handoff",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HUNT Handoff": {
+      "main": [
+        [
+          {
+            "node": "Guardian Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardian Agent": {
+      "main": [
+        [
+          {
+            "node": "PRIDE Pause Point",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PRIDE Pause Point": {
+      "main": [
+        [
+          {
+            "node": "Hunter Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "GUARD Safety Rail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hunter Agent": {
+      "main": [
+        [
+          {
+            "node": "CYCLE Capture1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GUARD Safety Rail": {
+      "main": [
+        [
+          {
+            "node": "CYCLE Capture",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CYCLE Capture1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CYCLE Capture": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "39b6e0a9-9158-4ea2-b027-5e473501976d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "89c406b707acab2a7e53aa646c419560cb0ccc53fe8b99b116733e3184661336"
+  },
+  "id": "2uUPSIkLhkQviith",
+  "tags": [
+    {
+      "updatedAt": "2026-06-02T21:50:12.792Z",
+      "createdAt": "2026-06-02T21:50:12.792Z",
+      "id": "eUOqlowEHcpcnBqm",
+      "name": "ujima sacco"
+    }
+  ]
+}
