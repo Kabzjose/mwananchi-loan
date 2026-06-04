@@ -1,7 +1,7 @@
 
-# Ujima SACCO — Prototype Repository
+# Mwanachi loan — Prototype Repository
 
-This repository contains the Ujima SACCO capstone prototype: a client-side React application that demonstrates how ethically-designed AI agents can assist SACCO lending decisions while preserving oversight, auditability, and dignity.
+This repository contains the mwananchi capstone prototype: a client-side React application that demonstrates how ethically-designed AI agents can assist SACCO lending decisions while preserving oversight, auditability, and dignity.
 
 Key ideas:
 - The UI (client/) lets users apply for loans and view assessment results.
@@ -82,11 +82,8 @@ This folder contains the client application for the Ujima SACCO prototype.
 
 ## Preview Image
 
-The prototype includes a placeholder image at:
+<img width="1350" height="616" alt="image" src="https://github.com/user-attachments/assets/c55740c0-063c-490a-a5c4-28e87b38ab1c" />
 
-- `src/assets/image.png`
-
-Replace `src/assets/image.png` with your real screenshot (PNG) of the n8n workflow to display it in the About Prototype page.
 
 ## Quick start
 
@@ -94,7 +91,8 @@ Replace `src/assets/image.png` with your real screenshot (PNG) of the n8n workfl
 cd client
 pnpm install
 pnpm dev
-```
+``
+
 
 ## Notes
 
