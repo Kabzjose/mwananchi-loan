@@ -38,7 +38,7 @@ export const LoanResultsPage = () => {
               ['County', assessment.county],
               ['Phone', assessment.phoneNumber ?? 'N/A'],
               ['Email', assessment.email ?? 'N/A'],
-              ['Loan Amount', `KES ${assessment.loanAmount.toLocaleString()}`],
+              ['Loan Amount', `KES ${assessment.loanAmount?.toLocaleString() ?? 'N/A'}`],
             ].map(([label, value]) => (
               <div key={label} className="flex items-center justify-between gap-4 border-b border-slate-100 pb-3">
                 <dt className="font-semibold text-slate-500">{label}</dt>
