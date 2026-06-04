@@ -82,11 +82,8 @@ This folder contains the client application for the Ujima SACCO prototype.
 
 ## Preview Image
 
-The prototype includes a placeholder image at:
+<img width="1350" height="616" alt="image" src="https://github.com/user-attachments/assets/c55740c0-063c-490a-a5c4-28e87b38ab1c" />
 
-- `src/assets/image.png`
-
-Replace `src/assets/image.png` with your real screenshot (PNG) of the n8n workflow to display it in the About Prototype page.
 
 ## Quick start
 
@@ -94,7 +91,8 @@ Replace `src/assets/image.png` with your real screenshot (PNG) of the n8n workfl
 cd client
 pnpm install
 pnpm dev
-```
+``
+
 
 ## Notes
 
