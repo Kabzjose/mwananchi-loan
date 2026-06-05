@@ -82,7 +82,7 @@ const mergeWorkflowAssessment = (application: LoanApplication, response?: LoanWo
   return {
     ...fallback,
     applicantName: response?.applicantName ?? response?.applicant?.name ?? fallback.applicantName,
-    loanAmount: Number(response?.loanAmount ?? response?.amount ?? fallback.loanAmount),
+   loanAmount: Number(response?.amount) || Number(response?.loanAmount) || fallback.loanAmount,
     status: normalizeStatus(response, fallback.status),
     riskScore: response?.riskScore ?? fallback.riskScore,
     repaymentCapacity: response?.repaymentCapacity ?? fallback.repaymentCapacity,
