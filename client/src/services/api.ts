@@ -62,8 +62,8 @@ const normalizeStatus = (response: LoanWorkflowResponse | undefined, fallback: L
   }
 
   if (response.status === 'Human Review Required' || response.approved === false || response.escalated === true) {
-    return 'Escalated to Human Loan Officer';
-  }
+  return 'Escalated to Human Loan Officer-Your application is under review by our team. We will contact you if we need more information or once a decision is made.';
+}
 
   if (response.status === 'Bias Safe') {
     return 'Approved — Our team will contact you shortly with next steps';
