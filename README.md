@@ -16,6 +16,10 @@ Relevant files under `client/`:
 - `client/src/types/loan.ts` — Domain types used across the UI and services.
 - `client/src/pages/AboutPrototypePage.tsx` — About page describing the prototype (displays workflow image).
 
+ ## Preview Image
+
+<img width="1350" height="616" alt="image" src="https://github.com/user-attachments/assets/c55740c0-063c-490a-a5c4-28e87b38ab1c" />
+
 ## Quick start (local development)
 
 1. Open a terminal
@@ -80,9 +84,7 @@ Add a license file if you plan to publish this repo. I didn't include one by def
 
 This folder contains the client application for the Ujima SACCO prototype.
 
-## Preview Image
 
-<img width="1350" height="616" alt="image" src="https://github.com/user-attachments/assets/c55740c0-063c-490a-a5c4-28e87b38ab1c" />
 
 
 ## Quick start
